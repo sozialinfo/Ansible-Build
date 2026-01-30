@@ -1,4 +1,5 @@
 ---
+n8n_configmap: []
 n8n_build_image: false
 n8n_description: N8N
 n8n_state: started
