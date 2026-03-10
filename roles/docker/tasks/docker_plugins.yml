@@ -1,0 +1,25 @@
+---
+- name: Ensure {{ role_name }} plugins dir exists
+  ansible.builtin.file:
+    path: "{{ docker_plugins_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Check current docker-rollout version
+  ansible.builtin.command: "{{ docker_plugins_dir }}/docker-rollout version"
+  register: docker_rollout_vsn
+  changed_when: false
+  failed_when: false
+
+- name: Set current docker-rollout version
+  ansible.builtin.set_fact:
+    docker_rollout_current_version: "{{ docker_rollout_vsn.stdout | regex_search('(\\d+(\\.\\d+)+)') }}"
+  when: docker_rollout_vsn.stdout | regex_search("\\d")
+
+- name: Install docker-rollout {{ docker_rollout_version }}
+  ansible.builtin.get_url:
+    url: https://github.com/wowu/docker-rollout/releases/download/v{{ docker_rollout_version }}/docker-rollout
+    dest: "{{ docker_plugins_dir }}/docker-rollout"
+    force: true
+    mode: "0755"
+  when: docker_rollout_current_version is not defined or docker_rollout_current_version != docker_rollout_version

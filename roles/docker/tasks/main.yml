@@ -16,6 +16,12 @@
   tags:
     - docker
 
+- name: Include {{ role_name }} plugins tasks
+  ansible.builtin.include_tasks: "{{ role_name }}_plugins.yml"
+  tags:
+    - docker
+    - docker-plugins
+
 - name: Include {{ role_name }} ubuntu tasks
   ansible.builtin.include_tasks: "{{ role_name }}-ubuntu.yml"
   when: docker_packages is defined and (ansible_distribution == 'Ubuntu')

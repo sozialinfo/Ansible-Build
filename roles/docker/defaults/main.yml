@@ -1,5 +1,7 @@
 ---
 docker_scripts_dir: /usr/local/bin/
+docker_plugins_dir: /usr/local/lib/docker/cli-plugins
+docker_rollout_version: "0.13"
 docker_data_dir: /var/lib/docker
 docker_ipv6_enabled: false
 docker_build_dir: /srv/build
