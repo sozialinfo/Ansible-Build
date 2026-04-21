@@ -63,7 +63,12 @@
       description: "{{ prometheus_description }}"
     image: "{{ prometheus_image }}"
     restart_policy: unless-stopped
-    command: --storage.tsdb.retention.time={{ prometheus_retention_time }} --config.file=/etc/prometheus/prometheus.yml --web.enable-admin-api --web.enable-remote-write-receiver
+    command: >-
+      --storage.tsdb.retention.time={{ prometheus_retention_time }}
+      {% if prometheus_retention_size != '0' %}--storage.tsdb.retention.size={{ prometheus_retention_size }}{% endif %}
+      --config.file=/etc/prometheus/prometheus.yml
+      --web.enable-admin-api
+      --web.enable-remote-write-receiver
     volumes:
       - "{{ prometheus_volume_name }}:/prometheus"
       - "{{ prometheus_data_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml"

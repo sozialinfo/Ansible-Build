@@ -9,6 +9,7 @@ prometheus_etc_hosts: {}
 prometheus_proxy_basic_auth_username: prometheus
 prometheus_proxy_basic_auth_password: "{{ vault_prometheus_proxy_basic_auth_password }}"
 prometheus_retention_time: 15d
+prometheus_retention_size: 0
 prometheus_alertmanager_basic_auth_password: "{{ vault_prometheus_alertmanager_basic_auth_password }}"
 prometheus_node_exporter_basic_auth_password: "{{ vault_prometheus_node_exporter_basic_auth_password }}"
 prometheus_cadvisor_basic_auth_password: "{{ vault_prometheus_cadvisor_basic_auth_password }}"
