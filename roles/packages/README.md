@@ -1,3 +1,5 @@
+<img src="/logos/packages.png" alt="packages logo" width="100" height="100">
+
 # Packages role
 
 Set env vars and install packages.
@@ -24,21 +26,21 @@ apt_repos:
     branch: contrib
     key: https://tommie.github.io/innernet-debian/repository.asc
 
-packages:
+group_packages:
   - name: zsh
   - name: restic
   - name: vim
     version: 2:8.0.1453-1ubuntu1.3
 host_packages:
   - name: cifs_utils
-snap_packages:
-  - name: ripgrep
 pip_packages:
   - name: docker
 script_packages:
-  - path: /usr/local/bin/hello-mom
+  - dest: /usr/local/bin/hello-mom
     content: |
       echo "Hello Mom!"
+  - dest: /usr/local/bin/hello-dad
+    src: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/hello-dad.sh"
 ```
 
 Include it in your playbook.
@@ -56,6 +58,6 @@ Or include it in another role.
   include_role:
     name: packages
   vars:
-    packages:
+    group_packages:
       - "{{ docker_package }}"
 ```
