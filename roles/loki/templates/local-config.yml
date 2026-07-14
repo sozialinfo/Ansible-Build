@@ -28,6 +28,15 @@ query_range:
 
 limits_config:
   metric_aggregation_enabled: true
+  retention_period: 14d
+
+compactor:
+  working_directory: /tmp/loki/compactor
+  retention_enabled: true
+  delete_request_store: filesystem
+  compaction_interval: 10m
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 150
 
 schema_config:
   configs:
