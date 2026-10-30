@@ -8,7 +8,7 @@
   ansible.builtin.cron:
     name: PATH
     env: true
-    job: "{{ package_path_var }}"
+    job: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:{{ package_path_var }}
 
 - name: Add bin folder to system-wide $PATH
   ansible.builtin.copy:
