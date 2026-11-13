@@ -10,6 +10,11 @@
     dest: "{{ blackbox_exporter_data_dir }}/"
   loop:
     - files/config.yml
+  register: blackbox_exporter_conf
+
+# blackbox_exporter reads its config at start (or on /-/reload): without this a
+# new module is unknown until the container happens to restart, and every probe
+# using it fails with "Unknown module".
 
 - name: Start {{ role_name }} container {{ blackbox_exporter_hostname }}
   community.docker.docker_container:
@@ -19,6 +24,7 @@
     image: "{{ blackbox_exporter_image }}"
     restart_policy: unless-stopped
     recreate: false
+    restart: "{{ blackbox_exporter_conf is changed }}"
     volumes:
       - "{{ blackbox_exporter_data_dir }}:/etc/blackbox_exporter"
     ports:

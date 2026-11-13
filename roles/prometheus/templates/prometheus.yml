@@ -138,6 +138,25 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: {{ blackbox_exporter_hostname }}:9115
+{# One job per extra blackbox module, for targets that need a stricter check than
+   http_401_unauth (e.g. http_odoo_login). prometheus_blackbox_module_targets maps
+   a module name in the blackbox config to its list of target URLs. #}
+{% for module, module_targets in (prometheus_blackbox_module_targets | default({})).items() %}
+  - job_name: blackbox-{{ module }}
+    metrics_path: "/probe"
+    scrape_interval: 60s
+    params:
+      module: [{{ module }}]
+    static_configs:
+      - targets: {{ module_targets }}
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: {{ blackbox_exporter_hostname }}:9115
+{% endfor %}
 {% endif %}
 {% if prometheus_n8n_exporter_proxy_basic_auth_username is defined %}
   - job_name: n8n https
