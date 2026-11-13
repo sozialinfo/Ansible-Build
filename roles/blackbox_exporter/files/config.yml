@@ -40,3 +40,34 @@ modules:
       valid_status_codes: [403, 401, 200]
       preferred_ip_protocol: "ip4"
       ip_protocol_fallback: false
+  # Odoo end to end: /web/login is rendered from the database (registry, QWeb
+  # views, session), so it fails when the database is down, the registry did not
+  # load, or Odoo answers 5xx. Odoo's /web/health answers 200 without touching any
+  # database (and ?db_server_status=1 only reaches the "postgres" maintenance DB),
+  # and http_401_unauth accepts 401/403. No redirects: a maintenance or error page
+  # behind a redirect must not count as up.
+  http_odoo_login:
+    prober: http
+    timeout: 10s
+    http:
+      follow_redirects: false
+      valid_status_codes: [200]
+      fail_if_not_ssl: true
+      fail_if_body_not_matches_regexp:
+        - "oe_login_form"
+      preferred_ip_protocol: "ip4"
+      ip_protocol_fallback: false
+  # Keycloak realm: the OIDC discovery document must be served as JSON with an
+  # issuer and a JWKS URI. /admin (http_401_unauth) passes on any 200/401/403.
+  http_keycloak_realm:
+    prober: http
+    timeout: 10s
+    http:
+      follow_redirects: false
+      valid_status_codes: [200]
+      fail_if_not_ssl: true
+      fail_if_body_not_matches_regexp:
+        - '"issuer":"https://[^"]+/realms/[^"]+"'
+        - '"jwks_uri":"https://[^"]+/protocol/openid-connect/certs"'
+      preferred_ip_protocol: "ip4"
+      ip_protocol_fallback: false
