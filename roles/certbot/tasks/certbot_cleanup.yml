@@ -7,7 +7,8 @@
 
 - name: Create managed certificate list from proxy list
   ansible.builtin.set_fact:
-    managed_certs: "{{ nginx_proxies | selectattr('ssl', 'defined') | map(attribute='src_hostname') | map('replace', '*.', '') | list }}"
+    # An entry is TLS if it sets `tls:` or the older `ssl:`. Missing one here deletes its cert.
+    managed_certs: "{{ (nginx_proxies | selectattr('ssl', 'defined') | list + nginx_proxies | selectattr('tls', 'defined') | list) | map(attribute='src_hostname') | map('replace', '*.', '') | unique | list }}"
   when: nginx_proxies is defined
 
 - name: Remove unmanaged certificate with {{ role_name }}
