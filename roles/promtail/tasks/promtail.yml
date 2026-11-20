@@ -25,6 +25,8 @@
       - "{{ docker_data_dir }}/containers:/var/lib/docker/containers:ro"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "{{ promtail_data_dir }}:/etc/promtail"
+      # eMudhra (RHSB-2026-012): use the host's fixed CA bundle, not the image's
+      - "/etc/ssl/certs:/etc/ssl/certs:ro"
     command: -config.file=/etc/promtail/config.yml
     networks:
       - name: "{{ docker_network_name }}"
