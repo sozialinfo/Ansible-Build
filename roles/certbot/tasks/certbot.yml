@@ -18,7 +18,7 @@
     path: "{{ certbot_data_dir }}/live/{{ item.src_hostname | replace('*.', '') }}"
   loop: "{{ nginx_proxies }}"
   register: certbot_certs
-  when: item.ssl is defined and item.ssl
+  when: item.ssl | default(item.tls | default(false))
 
 - name: Create list of missing certs
   ansible.builtin.set_fact:

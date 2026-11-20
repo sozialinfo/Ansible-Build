@@ -3,7 +3,7 @@
   ansible.builtin.debug:
     msg: "{{ lookup('dig', item.src_hostname) }}"
   loop: "{{ nginx_proxies }}"
-  when: item.ssl is defined and item.ssl
+  when: item.ssl | default(item.tls | default(false))
   register: dig_src
   tags:
     - check
