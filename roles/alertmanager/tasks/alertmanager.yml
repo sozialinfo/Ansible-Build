@@ -25,6 +25,8 @@
     volumes:
       - "{{ alertmanager_volume_name }}:/alertmanager"
       - "{{ alertmanager_data_dir }}/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      # eMudhra (RHSB-2026-012): use the host's fixed CA bundle, not the image's
+      - "/etc/ssl/certs:/etc/ssl/certs:ro"
     ports:
       - "{{ alertmanager_port }}:9093"
     networks:

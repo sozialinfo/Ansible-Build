@@ -73,6 +73,8 @@
       - "{{ prometheus_volume_name }}:/prometheus"
       - "{{ prometheus_data_dir }}/prometheus.yml:/etc/prometheus/prometheus.yml"
       - "{{ prometheus_data_dir }}/rules:/etc/prometheus/rules:ro"
+      # eMudhra (RHSB-2026-012): use the host's fixed CA bundle, not the image's
+      - "/etc/ssl/certs:/etc/ssl/certs:ro"
     ports:
       - "{{ prometheus_port }}:9090"
     networks:
